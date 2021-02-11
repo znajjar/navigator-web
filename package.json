@@ -1,0 +1,8 @@
+{
+  "name": "websocket",
+  "version": "1.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "@stomp/stompjs": "^6.0.0"
+  }
+}

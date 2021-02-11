@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html lang="eng" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>World Navigator</title>
+</head>
+<body>
+<div class="container">
+    <h1>World Navigator</h1>
+
+    <div id="loginFormScreen">
+        <label for="usernameField"></label><input class="form-control" id="usernameField" placeholder="Username"
+                                                  type="text">
+        <button class="btn btn-primary" id="connectButton" onclick="connect()">connect</button>
+    </div>
+
+    <div id="joinGameScreen" hidden>
+        <button class="btn btn-primary" id="newGameButton" onclick="newGame()">create new game</button>
+        <ul id="gameList"></ul>
+    </div>
+
+    <div id="waitingScreen" hidden>
+        <h2>Waiting for host to start the game..</h2>
+    </div>
+
+    <div id="startGameScreen" hidden>
+        <button onclick="startGame()">start the game</button>
+    </div>
+
+    <div id="navigatingScreen" hidden>
+<!--        <input id="commandName" type="text" placeholder="command">-->
+<!--        <input id="args" type="text" placeholder="arguments">-->
+<!--        <button onclick="sendCommand()">send</button>-->
+        <button onclick="lookCommand()">look</button>
+        <button onclick="checkCommand()">check</button>
+        <button onclick="moveForwardCommand()">move forward</button>
+        <button onclick="moveBackwardCommand()">move backward</button>
+        <button onclick="turnLeftCommand()">turn left</button>
+        <button onclick="turnRightCommand()">turn right</button>
+        <button onclick="switchLightsCommand()">switch lights</button>
+        <button onclick="useFlashlightCommand()">use flashlight</button>
+        <br>
+        <input id="keyNameField" type="text" placeholder="key name">
+        <button onclick="useKeyCommand()">use key</button>
+
+    </div>
+
+    <div id="gameEndedScreen" hidden>
+        <p id="gameEndedText"></p>
+        <button onclick="">join another game</button>
+    </div>
+
+</div>
+<script th:src="@{/js/lib/sockjs.js}" type="text/javascript"></script>
+<script th:src="@{/js/lib/jquery.js}" type="text/javascript"></script>
+<script th:src="@{/js/lib/stomp.js}" type="text/javascript"></script>
+<script th:src="@{/js/script/script.js}" type="text/javascript"></script>
+</body>
+</html>
