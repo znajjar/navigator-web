@@ -8,16 +8,16 @@ public class PlayerCommandSet {
   private static PlayerCommandSet commandSet;
   private final HashMap<String, PlayerCommand> commands;
 
+  private PlayerCommandSet() {
+    commands = new HashMap<>();
+    initializeCommands();
+  }
+
   public static PlayerCommandSet getInstance() {
     if (commandSet == null) {
       commandSet = new PlayerCommandSet();
     }
     return commandSet;
-  }
-
-  private PlayerCommandSet() {
-    commands = new HashMap<>();
-    initializeCommands();
   }
 
   private void initializeCommands() {
@@ -35,6 +35,7 @@ public class PlayerCommandSet {
     insertCommand(new TurnRightPlayerCommand());
     insertCommand(new UseFlashlightPlayerCommand());
     insertCommand(new UseKeyPlayerCommand());
+    insertCommand(new SubmitPlayerCommand());
   }
 
   private void insertCommand(PlayerCommand command) {

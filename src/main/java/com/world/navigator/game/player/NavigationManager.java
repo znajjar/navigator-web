@@ -5,8 +5,8 @@ import com.world.navigator.game.mapitems.PassThrough;
 import com.world.navigator.game.mapitems.Room;
 import com.world.navigator.game.playeritems.Flashlight;
 
-class NavigationManager {
-  private static final PlayerEventFactory RESPONSE_FACTORY = PlayerEventFactory.getInstance();
+public class NavigationManager {
+  private static final PlayerResponseFactory RESPONSE_FACTORY = PlayerResponseFactory.getInstance();
   private final Inventory inventory;
   private final Location location;
 
@@ -15,13 +15,17 @@ class NavigationManager {
     this.location = location;
   }
 
-  public PlayerEvent turnRight() {
+  public Room getCurrentRoom() {
+    return location.getCurrentRoom();
+  }
+
+  public PlayerResponse turnRight() {
     Direction facingDirection = location.getFacingDirection().getRight();
     location.setFacingDirection(facingDirection);
     return RESPONSE_FACTORY.createSuccessfulTurnRightResponse(facingDirection);
   }
 
-  public PlayerEvent turnLeft() {
+  public PlayerResponse turnLeft() {
     Direction facingDirection = location.getFacingDirection().getLeft();
     location.setFacingDirection(facingDirection);
     return RESPONSE_FACTORY.createSuccessfulTurnLeftResponse(facingDirection);
@@ -58,7 +62,7 @@ class NavigationManager {
     location.setCurrentRoom(nextRoom);
   }
 
-  public PlayerEvent look() {
+  public PlayerResponse look() {
     if (canLookInFront()) {
       String itemTypeInFront = lookInFront();
       return RESPONSE_FACTORY.createSuccessfulLookResponse(itemTypeInFront);

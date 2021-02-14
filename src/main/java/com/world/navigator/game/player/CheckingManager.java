@@ -6,8 +6,8 @@ import com.world.navigator.game.mapitems.Room;
 import com.world.navigator.game.mapitems.RoomFloor;
 import com.world.navigator.game.playeritems.InventoryItem;
 
-class CheckingManager {
-  private static final PlayerEventFactory RESPONSE_FACTORY = PlayerEventFactory.getInstance();
+public class CheckingManager {
+  private static final PlayerResponseFactory RESPONSE_FACTORY = PlayerResponseFactory.getInstance();
   private final Inventory inventory;
   private final Location location;
 
@@ -16,7 +16,7 @@ class CheckingManager {
     this.location = location;
   }
 
-  public PlayerEvent checkItemInFront() {
+  public PlayerResponse checkItemInFront() {
     Room currentRoom = location.getCurrentRoom();
     Direction facingDirection = location.getFacingDirection();
 
@@ -32,17 +32,17 @@ class CheckingManager {
     Room currentRoom = location.getCurrentRoom();
     RoomFloor roomFloor = currentRoom.getFloor();
     for (InventoryItem item : roomFloor.takeOutItems()) {
-      item.getLootedBy(inventory);
+      inventory.takeItem(item);
     }
   }
 
-  private PlayerEvent check(Checkable checkable) {
-    PlayerEvent response = RESPONSE_FACTORY.createSuccessfulCheckResponse(checkable);
+  private PlayerResponse check(Checkable checkable) {
+    PlayerResponse response = RESPONSE_FACTORY.createSuccessfulCheckResponse(checkable);
 
     if (checkable.canBeChecked()) {
       InventoryItem[] acquiredItems = checkable.takeOutItems();
       for (InventoryItem item : acquiredItems) {
-        item.getLootedBy(inventory);
+        inventory.takeItem(item);
       }
     }
 

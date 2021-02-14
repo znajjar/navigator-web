@@ -63,7 +63,7 @@ public class DefaultDifficultyLevel implements DifficultyLevel {
 
   @Override
   public int getTimeLimitInSeconds() {
-    return 120;
+    return 300;
   }
 
   @Override

@@ -1,7 +1,6 @@
 package com.world.navigator.config;
 
-import com.world.navigator.service.UserService;
-import com.world.navigator.util.UserInterceptor;
+import com.world.navigator.security.AuthChannelInterceptorAdapter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -16,10 +15,10 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Order(Ordered.HIGHEST_PRECEDENCE + 99)
 public class WebSocketMessageBrokerConfig implements WebSocketMessageBrokerConfigurer {
 
-  private final UserService userService;
+  private final AuthChannelInterceptorAdapter authChannelInterceptorAdapter;
 
-  public WebSocketMessageBrokerConfig(UserService userService) {
-    this.userService = userService;
+  public WebSocketMessageBrokerConfig(AuthChannelInterceptorAdapter authChannelInterceptorAdapter) {
+    this.authChannelInterceptorAdapter = authChannelInterceptorAdapter;
   }
 
   @Override
@@ -31,13 +30,12 @@ public class WebSocketMessageBrokerConfig implements WebSocketMessageBrokerConfi
 
   @Override
   public void registerStompEndpoints(StompEndpointRegistry registry) {
-    registry.addEndpoint("/broadcast");
     registry.addEndpoint("/broadcast").withSockJS().setHeartbeatTime(60_000);
     registry.addEndpoint("/request").withSockJS();
   }
 
   @Override
   public void configureClientInboundChannel(ChannelRegistration registration) {
-    registration.interceptors(new UserInterceptor(userService));
+    registration.interceptors(authChannelInterceptorAdapter);
   }
 }

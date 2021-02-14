@@ -1,14 +1,13 @@
 package com.world.navigator.service;
 
-import com.world.navigator.model.Command;
-import com.world.navigator.model.User;
-import com.world.navigator.game.player.Player;
 import com.world.navigator.game.player.PlayerController;
-import com.world.navigator.game.player.PlayerEvenListener;
 import com.world.navigator.game.player.PlayerEvent;
+import com.world.navigator.game.player.PlayerEventListener;
+import com.world.navigator.game.player.PlayerResponse;
+import com.world.navigator.model.Command;
+import com.world.navigator.security.AuthUser;
 import com.world.navigator.util.PlayerCommandSet;
 import com.world.navigator.util.UserEventListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ArrayBlockingQueue;
@@ -16,23 +15,27 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-public class PlayerService implements PlayerEvenListener {
-  private static final int queueSize = 100;
+public class PlayerService implements PlayerEventListener {
+  private static final int QUEUE_SIZE = 100;
   private static final PlayerCommandSet COMMAND_SET = PlayerCommandSet.getInstance();
-  @Autowired UserService userService;
-  ConcurrentHashMap<User, PlayerController> players;
-  BlockingQueue<UserEventListener> listeners = new ArrayBlockingQueue<>(queueSize);
+  private final ConcurrentHashMap<AuthUser, PlayerController> players;
+  private final BlockingQueue<UserEventListener> listeners;
 
   public PlayerService() {
     players = new ConcurrentHashMap<>();
+    listeners = new ArrayBlockingQueue<>(QUEUE_SIZE);
   }
 
-  public void addPlayer(User user, PlayerController player) {
+  public void addPlayer(AuthUser user, PlayerController player) {
     players.put(user, player);
     player.addListener(this);
   }
 
-  public void execute(User user, Command command) {
+  public void removePlayer(AuthUser user) {
+    players.remove(user);
+  }
+
+  public void execute(AuthUser user, Command command) {
     PlayerController player = players.get(user);
     if (player == null) {
       return;
@@ -42,8 +45,22 @@ public class PlayerService implements PlayerEvenListener {
   }
 
   @Override
-  public void onEvent(Player player, PlayerEvent event) {
-    notifyListeners(player.getName(), event.toString());
+  public void onResponse(String playerName, PlayerResponse event) {
+    notifyListeners(playerName, event.toString());
+  }
+
+  @Override
+  public void onEvent(String playerName, PlayerEvent event) {
+    if (event.getEventType().equals("gameEnd")) {
+      players.forEach(
+          ((authUser, playerController) -> {
+            if (authUser.getName().equals(playerName)) {
+              players.remove(authUser);
+              playerController.removeListener(this);
+            }
+          }));
+    }
+    notifyListeners(playerName, event.toString());
   }
 
   public void registerListener(UserEventListener listener) {
@@ -56,7 +73,7 @@ public class PlayerService implements PlayerEvenListener {
     }
   }
 
-  public boolean isUserInGame(User user) {
+  public boolean isUserInGame(AuthUser user) {
     return players.containsKey(user);
   }
 }

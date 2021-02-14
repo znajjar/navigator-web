@@ -17,7 +17,7 @@ public class Chest extends LockedWithKey implements Container {
 
   @Override
   public String toString() {
-//    return "Chest requires the %s key".formatted(getKeyName());
+    //    return "Chest requires the %s key".formatted(getKeyName());
     return "chest";
   }
 

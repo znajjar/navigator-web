@@ -1,13 +1,12 @@
 package com.world.navigator.repository;
 
 import com.world.navigator.game.Game;
-import com.world.navigator.game.GameState;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GameRepository {
-  ConcurrentHashMap<String, Game> games = new ConcurrentHashMap<>();
+  private final ConcurrentHashMap<String, Game> games = new ConcurrentHashMap<>();
 
   public Game findGameById(String gameId) {
     return games.get(gameId);
@@ -19,11 +18,16 @@ public class GameRepository {
 
   public ArrayList<String> getJoinableGames() {
     ArrayList<String> joinableGames = new ArrayList<>();
+
     for (Game game : games.values()) {
-      if (game.getCurrentState().equals(GameState.READY)) {
+      if (game.isReady()) {
         joinableGames.add(game.getId());
       }
     }
     return joinableGames;
+  }
+
+  public void removeGame(String gameId) {
+    games.remove(gameId);
   }
 }

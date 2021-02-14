@@ -6,8 +6,8 @@ import com.world.navigator.game.mapitems.Room;
 import com.world.navigator.game.mapitems.RoomWithLightSwitch;
 import com.world.navigator.game.playeritems.Key;
 
-class InteractionManager {
-  private static final PlayerEventFactory RESPONSE_FACTORY = PlayerEventFactory.getInstance();
+public class InteractionManager {
+  private static final PlayerResponseFactory RESPONSE_FACTORY = PlayerResponseFactory.getInstance();
   private final Inventory inventory;
   private final Location location;
 
@@ -16,7 +16,7 @@ class InteractionManager {
     this.location = location;
   }
 
-  public PlayerEvent useKey(String keyName) {
+  public PlayerResponse useKey(String keyName) {
     if (inventory.hasKey(keyName)) {
       Key key = inventory.getKey(keyName);
       return useKeyOnItemInFront(key);
@@ -25,7 +25,7 @@ class InteractionManager {
     }
   }
 
-  private PlayerEvent useKeyOnItemInFront(Key key) {
+  private PlayerResponse useKeyOnItemInFront(Key key) {
     Room currentRoom = location.getCurrentRoom();
     Direction facingDirection = location.getFacingDirection();
     if (currentRoom.isLockedWithKeyInDirection(facingDirection)) {
@@ -37,7 +37,7 @@ class InteractionManager {
     }
   }
 
-  public PlayerEvent switchRoomLights() {
+  public PlayerResponse switchRoomLights() {
     Room currentRoom = location.getCurrentRoom();
     if (currentRoom instanceof RoomWithLightSwitch) {
       boolean isLit = ((RoomWithLightSwitch) currentRoom).switchLights();
@@ -47,7 +47,7 @@ class InteractionManager {
     }
   }
 
-  public PlayerEvent useFlashlight() {
+  public PlayerResponse useFlashlight() {
     if (inventory.hasFlashlight()) {
       inventory.getFlashlight().switchLight();
       return RESPONSE_FACTORY.createSuccessfulUseFlashlightResponse(inventory.getFlashlight());

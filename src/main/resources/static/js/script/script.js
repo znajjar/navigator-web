@@ -1,27 +1,46 @@
-var stompClient = null;
-var gameId = null;
-var userName = null;
+let stompClient = null;
+let gameId = null;
 
 function connect() {
-    userName = $('#usernameField').val();
-    console.log(userName)
-    if (userName.length === 0) {
+    const username = $('#usernameField').val();
+    const password = $('#passwordField').val();
+    if (username.length === 0 || password.length === 0) {
         return;
     }
-    var socket = new SockJS('/request');
+    const socket = new SockJS('/request');
     stompClient = Stomp.over(socket);
-    stompClient.connect({username: userName}, function () {
-        stompClient.subscribe('/user/queue/event/player', handlePlayerEvent);
+    stompClient.connect({username: username, password: password}, function () {
+        stompClient.subscribe('/user/queue/event/player', handleEvent);
         stompClient.subscribe('/user/queue/event/game/list', handleListEvent);
         stompClient.subscribe('/user/queue/event/game/joined', handleJoinEvent);
-        // stompClient.subscribe('/user/queue/event/game/update', handleListEvent)
         stompClient.subscribe('/topic/games/update', handleListEvent);
         hideAllScreens();
         showJoinGame();
         requestGamesList();
     }, function (err) {
-        console.log(err);
+        console.log(err)
+        const response = $("#loginResponse");
+        response.show();
+        response.text("Wrong Credentials")
     });
+}
+
+function signup() {
+    const username = $('#registerUsernameField').val();
+    const password = $('#registerPasswordField').val();
+    console.log(username)
+    if (username.length === 0 || password.length === 0) {
+        return;
+    }
+    const url = '/signup';
+    const data = {username: username, password: password};
+    $.post(url, data,
+        function (data) {
+            console.log(data);
+            const response = $("#signupResponse");
+            response.show();
+            response.text(data);
+        });
 }
 
 function hideAllScreens() {
@@ -29,7 +48,7 @@ function hideAllScreens() {
     $("#joinGameScreen").hide();
     $("#waitingScreen").hide();
     $("#startGameScreen").hide();
-    $("#navigatingScreen").hide();
+    $("#gameScreen").hide();
     $("#gameEndedScreen").hide();
 }
 
@@ -68,7 +87,6 @@ function handleJoinEvent(event) {
 
 function handleListEvent(event) {
     const gamesList = JSON.parse(event.body);
-    // document.getElementById('gameList')
     $('#gameList').empty()
     gamesList.forEach(addGameNode)
 }
@@ -82,7 +100,6 @@ function createGameNode(gameId) {
     const node = document.createElement('li');
     const text = document.createTextNode(gameId);
     const button = document.createElement('button');
-    // button.setAttribute('onclick', 'joinGame(' + gameId + ')');
     button.onclick = function () {
         joinGame(gameId)
     };
@@ -92,70 +109,33 @@ function createGameNode(gameId) {
     return node;
 }
 
-function handlePlayerEvent(event) {
+function handleEvent(event) {
     const playerEvent = JSON.parse(event.body);
-    console.log(playerEvent)
+    console.log(playerEvent);
     if (playerEvent.type === 'event') {
-        switch (playerEvent.eventType) {
-            case 'gameStarted':
-                hideAllScreens();
-                $('#navigatingScreen').show();
-                break;
-            case 'gameWon':
-                hideAllScreens();
-                $("gameEndedText").text("you won the game");
-                $("#gameEndedScreen").show();
-                break;
-            case 'gameLost':
-                hideAllScreens();
-                $("gameEndedText").text("you lost the game");
-                $("#gameEndedScreen").show();
-                break;
-        }
+        handlePlayerEvent(playerEvent);
+    } else if (playerEvent.type === 'response') {
+        handlePlayerResponse(playerEvent);
     }
 }
 
-function lookCommand() {
-    sendCommand('look');
-}
-
-function checkCommand() {
-    sendCommand('check');
-}
-
-function turnRightCommand() {
-    sendCommand('turnRight');
-}
-
-function turnLeftCommand() {
-    sendCommand('turnLeft');
-}
-
-function moveForwardCommand() {
-    sendCommand('moveForward');
-}
-
-function moveBackwardCommand() {
-    sendCommand('moveBackward');
-}
-
-function switchLightsCommand() {
-    sendCommand('switchLights');
-}
-
-function useFlashlightCommand() {
-    sendCommand('useFlashlight');
-}
-
-function useKeyCommand() {
-    const keyName = $('#keyNameField').val();
-    sendCommandWithArgs('useKey', [keyName])
-}
-
-function sendCommand(command) {
-    sendCommandWithArgs(command, [])
-}
-
-function sendCommandWithArgs(command, args) {
-    stompClient.send('/app/request/command', {}, JSON.stringify({name: command, args: []}));
+function handlePlayerEvent(playerEvent) {
+    const gameEndedScreen = $("#gameEndedScreen");
+    const gameEndedText = $("#gameEndedText");
+    switch (playerEvent.eventType) {
+        case 'gameStart':
+            hideAllScreens();
+            $('#gameScreen').show();
+            break;
+        case 'gameWon':
+            hideAllScreens();
+            gameEndedText.text('you won the game');
+            gameEndedScreen.show();
+            break;
+        case 'gameLost':
+            hideAllScreens();
+            gameEndedText.text('you lost the game');
+            gameEndedScreen.show();
+            break;
+    }
 }

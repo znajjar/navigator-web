@@ -1,27 +1,27 @@
 package com.world.navigator.game.playercommands;
 
 import com.world.navigator.game.player.Player;
-import com.world.navigator.game.player.PlayerEvent;
-import com.world.navigator.game.player.PlayerState;
+import com.world.navigator.game.player.PlayerResponse;
 
 public class StatusPlayerCommand extends PlayerCommand {
+
   @Override
   boolean checkState(Player player) {
-    return !player.getState().equals(PlayerState.WAITING);
+    return !player.state().isFinished();
   }
 
   @Override
-  PlayerEvent doCommand(Player player, String[] args) {
+  PlayerResponse doCommand(Player player, String[] args) {
     return player.getStatus();
   }
 
   @Override
-  PlayerEvent getInvalidStateResponse() {
+  PlayerResponse getInvalidStateResponse() {
     return RESPONSE_FACTORY.createFailedStatusResponse(INVALID_STATE_COMMENT);
   }
 
   @Override
-  PlayerEvent getInvalidArgsResponse() {
+  PlayerResponse getInvalidArgsResponse() {
     return RESPONSE_FACTORY.createFailedStatusResponse(INVALID_ARGS_COMMENT);
   }
 

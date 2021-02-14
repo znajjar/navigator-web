@@ -5,6 +5,7 @@ import com.world.navigator.game.playeritems.Key;
 import java.util.Random;
 
 public class GameRandomizer {
+  private static final int SECONDS_TO_MILLIS_FACTOR = 1000;
   private static final Random RANDOM = new Random();
   private final DifficultyLevel difficultyLevel;
 
@@ -91,8 +92,8 @@ public class GameRandomizer {
     return RANDOM.nextInt(bound);
   }
 
-  public int getTimeLimitInSeconds() {
-    return difficultyLevel.getTimeLimitInSeconds();
+  public int getTimeLimitInMilliseconds() {
+    return difficultyLevel.getTimeLimitInSeconds() * SECONDS_TO_MILLIS_FACTOR;
   }
 
   public int getStartingGoldCount() {

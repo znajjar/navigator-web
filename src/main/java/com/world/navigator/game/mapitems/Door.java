@@ -1,5 +1,6 @@
 package com.world.navigator.game.mapitems;
 
+import com.world.navigator.game.exceptions.ItemIsLockedException;
 import com.world.navigator.game.playeritems.InventoryItem;
 
 public class Door extends LockedWithKey implements PassThrough {
@@ -11,8 +12,12 @@ public class Door extends LockedWithKey implements PassThrough {
   }
 
   @Override
-  public int getNextRoomID() {
-    return nextRoomId;
+  public int getNextRoomID() throws ItemIsLockedException {
+    if (isUnlocked()) {
+      return nextRoomId;
+    } else {
+      throw new ItemIsLockedException();
+    }
   }
 
   @Override
@@ -47,7 +52,7 @@ public class Door extends LockedWithKey implements PassThrough {
 
   @Override
   public String toString() {
-//    return "Door requires the %s key".formatted(getKeyName());
+    //    return "Door requires the %s key".formatted(getKeyName());
     return "door";
   }
 }

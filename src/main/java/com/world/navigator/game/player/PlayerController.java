@@ -1,10 +1,12 @@
 package com.world.navigator.game.player;
 
 import com.world.navigator.game.playercommands.PlayerCommand;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+@Log4j2
 public class PlayerController implements Runnable {
   public static final int QUEUE_CAPACITY = 100;
   private final BlockingQueue<QueuedCommand> commandsQueue;
@@ -15,8 +17,12 @@ public class PlayerController implements Runnable {
     commandsQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
   }
 
-  public void addListener(PlayerEvenListener listener) {
-    player.addListener(listener);
+  public void addListener(PlayerEventListener listener) {
+    player.listeners().addListener(listener);
+  }
+
+  public void removeListener(PlayerEventListener listener) {
+    player.listeners().removeListener(listener);
   }
 
   public void queueCommand(PlayerCommand command, String[] args) {
@@ -36,10 +42,9 @@ public class PlayerController implements Runnable {
         String[] args = queuedCommand.args;
         command.execute(player, args);
       } catch (InterruptedException e) {
-        // TODO fix exception
-        e.printStackTrace();
+        log.warn("player command execution was interrupted");
       } catch (Exception e) {
-        e.printStackTrace();
+        log.warn("exception while executing player command:\n" + e.toString());
       }
     }
   }

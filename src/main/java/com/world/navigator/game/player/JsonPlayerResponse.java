@@ -1,21 +1,22 @@
-package com.world.navigator.game;
+package com.world.navigator.game.player;
 
 import com.world.navigator.game.mapitems.Checkable;
 import com.world.navigator.game.mapitems.Room;
 import com.world.navigator.game.mapitems.RoomWithLightSwitch;
 import com.world.navigator.game.mapitems.Trader;
-import com.world.navigator.game.player.PlayerEvent;
 import com.world.navigator.game.playeritems.Flashlight;
 import com.world.navigator.game.playeritems.GoldBag;
 import com.world.navigator.game.playeritems.InventoryItem;
 import com.world.navigator.game.playeritems.Key;
 import org.json.JSONObject;
 
-public class JsonPlayerEvent implements PlayerEvent {
-  JSONObject jsonObject;
-  String type;
+public class JsonPlayerResponse implements PlayerResponse {
+  private final JSONObject jsonObject;
+  private final String type;
+  private final boolean isSuccessful;
 
-  public JsonPlayerEvent(String type) {
+  public JsonPlayerResponse(String type, boolean isSuccessful) {
+    this.isSuccessful = isSuccessful;
     jsonObject = new JSONObject();
     this.type = type;
   }
@@ -23,12 +24,18 @@ public class JsonPlayerEvent implements PlayerEvent {
   @Override
   public String toString() {
     jsonObject.put("type", type);
+    jsonObject.put("success", isSuccessful);
     return jsonObject.toString();
   }
 
   @Override
   public String getType() {
     return type;
+  }
+
+  @Override
+  public boolean isSuccessful() {
+    return isSuccessful;
   }
 
   @Override

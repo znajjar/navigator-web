@@ -7,18 +7,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-  UserRepository userRepository;
+  private final UserRepository userRepository;
 
-  public UserService() {
-    userRepository = new UserRepository();
+  public UserService(UserRepository userRepository) {
+    this.userRepository = userRepository;
   }
 
   public void addUser(User user) {
-    userRepository.addUser(user);
+    userRepository.save(user);
   }
 
   public boolean isNameTaken(String name) {
-    return userRepository.hasUser(name);
+    return userRepository.existsByName(name);
   }
 
   public User getUserByName(String name) {

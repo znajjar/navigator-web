@@ -7,11 +7,12 @@ import com.world.navigator.game.playeritems.InventoryItem;
 import java.util.HashMap;
 
 public class Trader implements Observable {
+  private static final int GOLD = 100;
   private final HashMap<String, InventoryItem> menu;
   private final GoldBag goldBag;
 
   public Trader(InventoryItem[] menu) {
-    goldBag = new GoldBag();
+    goldBag = new GoldBag(GOLD);
     this.menu = new HashMap<>();
     for (InventoryItem item : menu) {
       this.menu.put(item.getItemType(), item);

@@ -131,7 +131,7 @@ public class WorldMapGenerator {
   }
 
   private void setLimits() {
-    builder.setTimeLimit(gameRandomizer.getTimeLimitInSeconds());
+    builder.setTimeLimit(gameRandomizer.getTimeLimitInMilliseconds());
     builder.setStartingGoldCount(gameRandomizer.getStartingGoldCount());
   }
 }

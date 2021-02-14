@@ -1,14 +1,14 @@
 package com.world.navigator.game.playercommands;
 
 import com.world.navigator.game.player.Player;
-import com.world.navigator.game.player.PlayerEvent;
+import com.world.navigator.game.player.PlayerResponse;
 
 public class SellItemPlayerCommand extends TradingPlayerCommand {
 
   @Override
-  PlayerEvent doCommand(Player player, String[] args) {
+  PlayerResponse doCommand(Player player, String[] args) {
     String itemName = args[0];
-    return player.sell(itemName);
+    return player.trade().sell(itemName);
   }
 
   @Override
@@ -17,12 +17,12 @@ public class SellItemPlayerCommand extends TradingPlayerCommand {
   }
 
   @Override
-  PlayerEvent getInvalidStateResponse() {
+  PlayerResponse getInvalidStateResponse() {
     return RESPONSE_FACTORY.createFailedSellResponse(INVALID_STATE_COMMENT);
   }
 
   @Override
-  PlayerEvent getInvalidArgsResponse() {
+  PlayerResponse getInvalidArgsResponse() {
     return RESPONSE_FACTORY.createFailedSellResponse(INVALID_ARGS_COMMENT);
   }
 

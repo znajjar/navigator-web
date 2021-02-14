@@ -1,27 +1,10 @@
 package com.world.navigator.repository;
 
 import com.world.navigator.model.User;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.concurrent.ConcurrentHashMap;
+public interface UserRepository extends MongoRepository<User, String> {
+  User findByName(String name);
 
-@Repository
-public class UserRepository {
-  ConcurrentHashMap<String, User> users;
-
-  public UserRepository() {
-    users = new ConcurrentHashMap<>();
-  }
-
-  public User findByName(String name) {
-    return users.get(name);
-  }
-
-  public boolean hasUser(String name) {
-    return users.containsKey(name);
-  }
-
-  public void addUser(User user) {
-    users.put(user.getName(), user);
-  }
+  boolean existsByName(String name);
 }

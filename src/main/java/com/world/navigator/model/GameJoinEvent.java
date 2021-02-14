@@ -8,6 +8,6 @@ import org.springframework.data.repository.NoRepositoryBean;
 @NoRepositoryBean
 @AllArgsConstructor
 public class GameJoinEvent {
-    String gameId;
-    boolean isHost;
+  String gameId;
+  boolean isHost;
 }

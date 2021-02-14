@@ -6,9 +6,9 @@ import com.world.navigator.game.mapitems.Trader;
 import com.world.navigator.game.playeritems.GoldBag;
 import com.world.navigator.game.playeritems.InventoryItem;
 
-class TradingManager {
+public class TradingManager {
   public static final String NOT_FACING_TRADER_MESSAGE = "You aren't facing a trader";
-  private static final PlayerEventFactory RESPONSE_FACTORY = PlayerEventFactory.getInstance();
+  private static final PlayerResponseFactory RESPONSE_FACTORY = PlayerResponseFactory.getInstance();
   private final Inventory inventory;
   private final Location location;
 
@@ -17,7 +17,7 @@ class TradingManager {
     this.location = location;
   }
 
-  public PlayerEvent trade() {
+  public PlayerResponse trade() {
     if (isTraderInFront()) {
       Trader trader = getTraderInFront();
       return RESPONSE_FACTORY.createSuccessfulTradeResponse(trader);
@@ -26,7 +26,7 @@ class TradingManager {
     }
   }
 
-  public PlayerEvent buy(String itemName) {
+  public PlayerResponse buy(String itemName) {
     if (isTraderInFront()) {
       Trader trader = getTraderInFront();
       return buyFromTrader(trader, itemName);
@@ -35,13 +35,13 @@ class TradingManager {
     }
   }
 
-  private PlayerEvent buyFromTrader(Trader trader, String itemName) {
+  private PlayerResponse buyFromTrader(Trader trader, String itemName) {
     if (trader.canSellItem(itemName)) {
       int itemPrice = trader.getItemPrice(itemName);
       if (inventory.hasEnoughGoldFor(itemPrice)) {
         GoldBag goldBagWithItemPrice = inventory.takeOutGold(itemPrice);
         InventoryItem boughtItem = trader.sellItemToPlayer(itemName, goldBagWithItemPrice);
-        boughtItem.getLootedBy(inventory);
+        inventory.takeItem(boughtItem);
         return RESPONSE_FACTORY.createSuccessfulBuyResponse(boughtItem);
       } else {
         return RESPONSE_FACTORY.createFailedBuyResponse("You don't have enough gold");
@@ -51,7 +51,7 @@ class TradingManager {
     }
   }
 
-  public PlayerEvent sell(String itemName) {
+  public PlayerResponse sell(String itemName) {
     if (inventory.hasItem(itemName)) {
       Trader trader = getTraderInFront();
       InventoryItem itemToBeSold = inventory.takeOutItem(itemName);
@@ -61,7 +61,7 @@ class TradingManager {
     }
   }
 
-  private PlayerEvent sellToTrader(Trader trader, InventoryItem itemToBeSold) {
+  private PlayerResponse sellToTrader(Trader trader, InventoryItem itemToBeSold) {
     GoldBag goldBag = trader.buyItemFromPlayer(itemToBeSold);
     inventory.loot(goldBag);
     return RESPONSE_FACTORY.createSuccessfulSellResponse(itemToBeSold);

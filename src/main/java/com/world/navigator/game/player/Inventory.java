@@ -9,7 +9,7 @@ import com.world.navigator.game.playeritems.Key;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-class Inventory implements LootingVisitor {
+public class Inventory implements LootingVisitor {
   private final GoldBag goldBag;
   private final HashMap<String, Key> keys;
   private final ArrayList<Flashlight> flashlights;
@@ -96,6 +96,10 @@ class Inventory implements LootingVisitor {
       points += item.getPrice();
     }
     return points;
+  }
+
+  public void takeItem(InventoryItem item) {
+    item.getLootedBy(this);
   }
 
   @Override

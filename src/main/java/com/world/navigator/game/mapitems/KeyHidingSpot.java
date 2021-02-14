@@ -47,7 +47,7 @@ public abstract class KeyHidingSpot implements Checkable {
   public String toString() {
     String keyString;
     if (hasKey()) {
-//      keyString = "that has the %s key".formatted(key.getItemType());
+      //      keyString = "that has the %s key".formatted(key.getItemType());
       keyString = String.format("that has the %s key", key.getItemType());
     } else {
       keyString = "that doesn't have a key";

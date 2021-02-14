@@ -1,28 +1,28 @@
 package com.world.navigator.game.playercommands;
 
 import com.world.navigator.game.player.Player;
-import com.world.navigator.game.player.PlayerEvent;
+import com.world.navigator.game.player.PlayerResponse;
 
 public class UseKeyPlayerCommand extends NavigationPlayerCommand {
 
   @Override
-  PlayerEvent doCommand(Player player, String[] args) {
+  PlayerResponse doCommand(Player player, String[] args) {
     String keyName = args[0];
-    return player.useKey(keyName);
+    return player.interact().useKey(keyName);
   }
 
   @Override
   boolean checkArgs(String[] args) {
-    return args.length == 0;
+    return args.length == 1;
   }
 
   @Override
-  PlayerEvent getInvalidStateResponse() {
+  PlayerResponse getInvalidStateResponse() {
     return RESPONSE_FACTORY.createFailedUseKeyResponse(INVALID_STATE_COMMENT);
   }
 
   @Override
-  PlayerEvent getInvalidArgsResponse() {
+  PlayerResponse getInvalidArgsResponse() {
     return RESPONSE_FACTORY.createFailedUseKeyResponse(INVALID_ARGS_COMMENT);
   }
 
