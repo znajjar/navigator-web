@@ -124,5 +124,7 @@
     <orderEntry type="library" name="Maven: org.json:json:20201115" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-security:2.4.2" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-web:5.4.2" level="project" />
+    <orderEntry type="library" name="bootstrap" level="application" />
+    <orderEntry type="library" name="stomp.js" level="application" />
   </component>
 </module>

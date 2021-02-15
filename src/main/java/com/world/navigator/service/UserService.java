@@ -1,6 +1,6 @@
 package com.world.navigator.service;
 
-import com.world.navigator.model.User;
+import com.world.navigator.entity.User;
 import com.world.navigator.repository.UserRepository;
 import org.springframework.stereotype.Service;
 

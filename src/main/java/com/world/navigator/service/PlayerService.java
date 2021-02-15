@@ -1,10 +1,10 @@
 package com.world.navigator.service;
 
+import com.world.navigator.entity.Command;
 import com.world.navigator.game.player.PlayerController;
 import com.world.navigator.game.player.PlayerEvent;
 import com.world.navigator.game.player.PlayerEventListener;
 import com.world.navigator.game.player.PlayerResponse;
-import com.world.navigator.model.Command;
 import com.world.navigator.security.AuthUser;
 import com.world.navigator.util.PlayerCommandSet;
 import com.world.navigator.util.UserEventListener;
@@ -32,7 +32,9 @@ public class PlayerService implements PlayerEventListener {
   }
 
   public void removePlayer(AuthUser user) {
-    players.remove(user);
+    if (user != null) {
+      players.remove(user);
+    }
   }
 
   public void execute(AuthUser user, Command command) {

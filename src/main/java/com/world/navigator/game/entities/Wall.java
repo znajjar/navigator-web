@@ -1,4 +1,4 @@
-package com.world.navigator.game.mapitems;
+package com.world.navigator.game.entities;
 
 public class Wall implements Observable {
 

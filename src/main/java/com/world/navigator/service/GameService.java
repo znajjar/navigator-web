@@ -3,26 +3,27 @@ package com.world.navigator.service;
 import com.world.navigator.game.Game;
 import com.world.navigator.game.GameEventListener;
 import com.world.navigator.game.player.PlayerController;
-import com.world.navigator.repository.GameRepository;
 import com.world.navigator.security.AuthUser;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
 public class GameService implements GameEventListener {
-  private final PlayerService playerService;
-  private final GameRepository gameRepository;
+    private final ConcurrentHashMap<String, Game> games;
+    private final PlayerService playerService;
   private final TaskScheduler taskScheduler;
 
   public GameService(PlayerService playerService, TaskScheduler taskScheduler) {
     this.playerService = playerService;
-    this.taskScheduler = taskScheduler;
-    this.gameRepository = new GameRepository();
+      this.taskScheduler = taskScheduler;
+      games = new ConcurrentHashMap<>();
   }
 
   public boolean canCreateGame(AuthUser user) {
@@ -31,7 +32,7 @@ public class GameService implements GameEventListener {
 
   public String newGame(AuthUser user) {
     Game game = Game.createDefaultDifficultyLevelGame(user.getName(), taskScheduler);
-    gameRepository.addGame(game);
+      games.put(game.getId(), game);
     PlayerController player = game.nextPlayer(user.getName());
     playerService.addPlayer(user, player);
     String gameId = game.getId();
@@ -41,7 +42,7 @@ public class GameService implements GameEventListener {
   }
 
   public boolean canAddUserToGame(AuthUser user, String gameId) {
-    Game game = gameRepository.findGameById(gameId);
+      Game game = games.get(gameId);
     if (game == null) {
       return false;
     }
@@ -50,7 +51,7 @@ public class GameService implements GameEventListener {
   }
 
   public void addUserToGame(AuthUser user, String gameId) {
-    Game game = gameRepository.findGameById(gameId);
+      Game game = games.get(gameId);
     if (game == null) {
       return;
     }
@@ -65,7 +66,7 @@ public class GameService implements GameEventListener {
   }
 
   public boolean canStartGame(AuthUser user, String gameId) {
-    Game game = gameRepository.findGameById(gameId);
+      Game game = games.get(gameId);
     if (game == null) {
       return false;
     }
@@ -74,24 +75,27 @@ public class GameService implements GameEventListener {
   }
 
   public void startGame(AuthUser user, @Payload String gameId) {
-    Game game = gameRepository.findGameById(gameId);
+      Game game = games.get(gameId);
     if (game == null) {
-      return;
+        return;
     }
 
-    String gameHost = game.getHostName();
-    if (gameHost.equals(user.getName())) {
-      log.info("{} started game {}", user.getName(), gameId);
-      game.start();
+      String gameHost = game.getHostName();
+      if (gameHost.equals(user.getName())) {
+          log.info("{} started game {}", user.getName(), gameId);
+          game.start();
+      }
+  }
+
+    public List<String> listJoinableGames() {
+        return games.values().stream()
+                .filter((Game::isReady))
+                .map(Game::getId)
+                .collect(Collectors.toList());
     }
-  }
 
-  public ArrayList<String> listJoinableGames() {
-    return gameRepository.getJoinableGames();
-  }
-
-  @Override
-  public void onGameEnd(String gameId) {
-    gameRepository.removeGame(gameId);
-  }
+    @Override
+    public void onGameEnd(String gameId) {
+        games.remove(gameId);
+    }
 }

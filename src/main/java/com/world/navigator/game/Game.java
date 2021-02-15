@@ -1,13 +1,13 @@
 package com.world.navigator.game;
 
+import com.world.navigator.game.entities.PassThrough;
+import com.world.navigator.game.entities.Room;
+import com.world.navigator.game.entities.WinningRoom;
 import com.world.navigator.game.exceptions.ItemIsLockedException;
 import com.world.navigator.game.fighting.FightsTracker;
 import com.world.navigator.game.generator.DefaultDifficultyLevel;
 import com.world.navigator.game.generator.DifficultyLevel;
 import com.world.navigator.game.generator.WorldMapGenerator;
-import com.world.navigator.game.mapitems.PassThrough;
-import com.world.navigator.game.mapitems.Room;
-import com.world.navigator.game.mapitems.WinningRoom;
 import com.world.navigator.game.player.Player;
 import com.world.navigator.game.player.PlayerController;
 import com.world.navigator.game.playeritems.GoldBag;
@@ -16,6 +16,7 @@ import org.springframework.scheduling.TaskScheduler;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -162,5 +163,22 @@ public class Game {
     listeners.forEach((gameEventListener) -> gameEventListener.onGameEnd(id));
     listeners.clear();
     players.clear();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Game game = (Game) o;
+    return Objects.equals(id, game.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
   }
 }

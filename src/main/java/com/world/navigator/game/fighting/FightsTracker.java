@@ -1,7 +1,7 @@
 package com.world.navigator.game.fighting;
 
+import com.world.navigator.game.entities.Room;
 import com.world.navigator.game.exceptions.PlayerIsInAFightException;
-import com.world.navigator.game.mapitems.Room;
 import com.world.navigator.game.player.Player;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,15 +18,12 @@ public class FightsTracker {
   }
 
   public Room movePlayerBetween(Player player, Room currentRoom, Room nextRoom) {
-    // in case player gets into a fight while trying to move out of room
-    // if false it means the player is in a fight and shouldn't move out of room
-    boolean isSuccessful = latestPlayerToEnterRoom.remove(currentRoom, player);
-    if (isSuccessful) {
-      checkForFightInRoom(player, nextRoom);
-      return nextRoom;
-    } else {
-      return currentRoom;
+    if (!player.state().isFighting()) {
+      throw new PlayerIsInAFightException();
     }
+    latestPlayerToEnterRoom.remove(currentRoom);
+    checkForFightInRoom(player, nextRoom);
+    return nextRoom;
   }
 
   private void checkForFightInRoom(Player movingPlayer, Room nextRoom) {

@@ -6,27 +6,27 @@ import com.world.navigator.game.player.PlayerResponse;
 public class TradePlayerCommand extends NavigationPlayerCommand {
 
   @Override
-  PlayerResponse doCommand(Player player, String[] args) {
-    return player.trade().trade();
+  public PlayerResponse execute(Player player, String[] args) {
+      return player.trade().trade();
   }
 
-  @Override
-  PlayerResponse getInvalidStateResponse() {
-    return RESPONSE_FACTORY.createFailedTradeResponse(INVALID_STATE_COMMENT);
-  }
+    @Override
+    public PlayerResponse getInvalidStateResponse() {
+        return RESPONSE_FACTORY.createFailedTradeResponse(INVALID_STATE_COMMENT);
+    }
 
-  @Override
-  PlayerResponse getInvalidArgsResponse() {
-    return RESPONSE_FACTORY.createFailedTradeResponse(INVALID_ARGS_COMMENT);
-  }
+    @Override
+    public PlayerResponse getInvalidArgsResponse() {
+        return RESPONSE_FACTORY.createFailedTradeResponse(INVALID_ARGS_COMMENT);
+    }
 
   @Override
   public String getName() {
     return "trade";
   }
 
-  @Override
-  void updateState(Player player) {
-    player.state().trading();
-  }
+    @Override
+    public void updateState(Player player) {
+        player.state().trading();
+    }
 }

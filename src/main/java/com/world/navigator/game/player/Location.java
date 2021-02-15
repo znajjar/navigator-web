@@ -1,7 +1,7 @@
 package com.world.navigator.game.player;
 
 import com.world.navigator.game.Direction;
-import com.world.navigator.game.mapitems.Room;
+import com.world.navigator.game.entities.Room;
 
 class Location {
   private Direction facingDirection;

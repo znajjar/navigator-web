@@ -1,9 +1,9 @@
 package com.world.navigator.game.player;
 
 import com.world.navigator.game.Direction;
-import com.world.navigator.game.mapitems.LockedWithKey;
-import com.world.navigator.game.mapitems.Room;
-import com.world.navigator.game.mapitems.RoomWithLightSwitch;
+import com.world.navigator.game.entities.LockedWithKey;
+import com.world.navigator.game.entities.Room;
+import com.world.navigator.game.entities.RoomWithLightSwitch;
 import com.world.navigator.game.playeritems.Key;
 
 public class InteractionManager {

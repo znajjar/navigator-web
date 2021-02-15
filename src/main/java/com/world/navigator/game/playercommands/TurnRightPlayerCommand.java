@@ -6,17 +6,17 @@ import com.world.navigator.game.player.PlayerResponse;
 public class TurnRightPlayerCommand extends NavigationPlayerCommand {
 
   @Override
-  PlayerResponse doCommand(Player player, String[] args) {
+  public PlayerResponse execute(Player player, String[] args) {
     return player.navigate().turnRight();
   }
 
   @Override
-  PlayerResponse getInvalidStateResponse() {
+  public PlayerResponse getInvalidStateResponse() {
     return RESPONSE_FACTORY.createFailedTurnResponse(INVALID_STATE_COMMENT);
   }
 
   @Override
-  PlayerResponse getInvalidArgsResponse() {
+  public PlayerResponse getInvalidArgsResponse() {
     return RESPONSE_FACTORY.createFailedTurnResponse(INVALID_ARGS_COMMENT);
   }
 

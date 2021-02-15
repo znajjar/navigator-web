@@ -5,7 +5,7 @@ import com.world.navigator.game.player.Player;
 public abstract class NavigationPlayerCommand extends PlayerCommand {
 
   @Override
-  boolean checkState(Player player) {
-    return player.state().isNavigating();
+  public boolean checkState(Player player) {
+      return player.state().isNavigating();
   }
 }

@@ -1,28 +1,27 @@
 package com.world.navigator.game;
 
-import com.world.navigator.game.mapitems.Room;
-import com.world.navigator.game.mapitems.WinningRoom;
+import com.world.navigator.game.entities.Room;
+import com.world.navigator.game.entities.WinningRoom;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class WorldMap {
-  private final int playersLimit;
   private final ConcurrentHashMap<Integer, Room> rooms;
   private final long timeLimit;
   private final ArrayList<Integer> spawnableRoomsIds;
   private final int startingGoldCount;
   private int spawnableRoomIndex;
 
-  protected WorldMap(
-      int playersLimit, HashMap<Integer, Room> rooms, long timeLimit, int startingGoldCount) {
-    this.playersLimit = playersLimit;
+  protected WorldMap(HashMap<Integer, Room> rooms, long timeLimit, int startingGoldCount) {
     this.timeLimit = timeLimit;
     this.rooms = new ConcurrentHashMap<>(rooms);
     this.startingGoldCount = startingGoldCount;
     spawnableRoomsIds = new ArrayList<>();
     findSpawnableRoomsIds();
+    Collections.shuffle(spawnableRoomsIds);
     spawnableRoomIndex = 0;
   }
 
@@ -39,10 +38,6 @@ public class WorldMap {
     return timeLimit;
   }
 
-  public int getPlayersLimit() {
-    return playersLimit;
-  }
-
   public int getStartingGoldCount() {
     return startingGoldCount;
   }
@@ -52,6 +47,10 @@ public class WorldMap {
   }
 
   public Room nextSpawnableRoom() {
-    return getRoomById(spawnableRoomsIds.get(spawnableRoomIndex++));
+    return getRoomById(spawnableRoomsIds.get(nextSpawnableRoomIndex()));
+  }
+
+  private synchronized int nextSpawnableRoomIndex() {
+    return spawnableRoomIndex++;
   }
 }

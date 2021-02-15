@@ -1,6 +1,18 @@
 let stompClient = null;
 let gameId = null;
 
+$("#passwordField").keyup(function (event) {
+    if (event.keyCode === 13) {
+        $("#connectButton").click();
+    }
+});
+
+$("#registerPasswordField").keyup(function (event) {
+    if (event.keyCode === 13) {
+        $("#registerButton").click();
+    }
+});
+
 function connect() {
     const username = $('#usernameField').val();
     const password = $('#passwordField').val();
@@ -103,6 +115,7 @@ function createGameNode(gameId) {
     button.onclick = function () {
         joinGame(gameId)
     };
+    button.class = "btn btn-primary";
     button.textContent = 'join';
     node.appendChild(text)
     node.appendChild(button)

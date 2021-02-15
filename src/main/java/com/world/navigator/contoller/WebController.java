@@ -1,7 +1,7 @@
 package com.world.navigator.contoller;
 
-import com.world.navigator.model.SignupRequest;
-import com.world.navigator.model.User;
+import com.world.navigator.entity.SignupRequest;
+import com.world.navigator.entity.User;
 import com.world.navigator.service.UserService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;

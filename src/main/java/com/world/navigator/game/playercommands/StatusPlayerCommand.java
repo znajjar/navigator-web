@@ -6,24 +6,24 @@ import com.world.navigator.game.player.PlayerResponse;
 public class StatusPlayerCommand extends PlayerCommand {
 
   @Override
-  boolean checkState(Player player) {
-    return !player.state().isFinished();
+  public boolean checkState(Player player) {
+      return !player.state().isFinished();
   }
 
-  @Override
-  PlayerResponse doCommand(Player player, String[] args) {
-    return player.getStatus();
-  }
+    @Override
+    public PlayerResponse execute(Player player, String[] args) {
+        return player.getStatus();
+    }
 
-  @Override
-  PlayerResponse getInvalidStateResponse() {
-    return RESPONSE_FACTORY.createFailedStatusResponse(INVALID_STATE_COMMENT);
-  }
+    @Override
+    public PlayerResponse getInvalidStateResponse() {
+        return RESPONSE_FACTORY.createFailedStatusResponse(INVALID_STATE_COMMENT);
+    }
 
-  @Override
-  PlayerResponse getInvalidArgsResponse() {
-    return RESPONSE_FACTORY.createFailedStatusResponse(INVALID_ARGS_COMMENT);
-  }
+    @Override
+    public PlayerResponse getInvalidArgsResponse() {
+        return RESPONSE_FACTORY.createFailedStatusResponse(INVALID_ARGS_COMMENT);
+    }
 
   @Override
   public String getName() {

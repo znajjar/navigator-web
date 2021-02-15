@@ -1,8 +1,8 @@
 package com.world.navigator.game.generator.observables;
 
+import com.world.navigator.game.entities.Mirror;
+import com.world.navigator.game.entities.Observable;
 import com.world.navigator.game.generator.GameRandomizer;
-import com.world.navigator.game.mapitems.Mirror;
-import com.world.navigator.game.mapitems.Observable;
 import com.world.navigator.game.playeritems.Key;
 
 public class RandomMirrorGenerator implements RandomObservableGenerator {

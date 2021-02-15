@@ -1,8 +1,8 @@
 package com.world.navigator.game.player;
 
 import com.world.navigator.game.Direction;
-import com.world.navigator.game.mapitems.PassThrough;
-import com.world.navigator.game.mapitems.Room;
+import com.world.navigator.game.entities.PassThrough;
+import com.world.navigator.game.entities.Room;
 import com.world.navigator.game.playeritems.Flashlight;
 
 public class NavigationManager {

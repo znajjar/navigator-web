@@ -1,4 +1,4 @@
-package com.world.navigator.game.mapitems;
+package com.world.navigator.game.entities;
 
 import com.world.navigator.game.Direction;
 import com.world.navigator.game.playeritems.Flashlight;

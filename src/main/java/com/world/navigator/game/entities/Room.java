@@ -1,4 +1,4 @@
-package com.world.navigator.game.mapitems;
+package com.world.navigator.game.entities;
 
 import com.world.navigator.game.Direction;
 import com.world.navigator.game.exceptions.RoomNotLitException;
@@ -6,6 +6,7 @@ import com.world.navigator.game.exceptions.WrongTypeOfItemException;
 import com.world.navigator.game.playeritems.Flashlight;
 
 import java.util.EnumMap;
+import java.util.Objects;
 
 public class Room {
   private static Room EMPTY_ROOM;
@@ -108,11 +109,28 @@ public class Room {
       return (LockedWithKey) itemOnWall;
     } else {
       throw new WrongTypeOfItemException(
-          "Item of type " + Observable.class + " is not a LockedWithKey");
+              "Item of type " + Observable.class + " is not a LockedWithKey");
     }
   }
 
   public RoomFloor getFloor() {
     return floor;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Room room = (Room) o;
+    return id == room.id;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
   }
 }

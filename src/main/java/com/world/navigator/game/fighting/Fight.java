@@ -53,8 +53,13 @@ public class Fight {
     } else if (secondPlayerPoints > firstPlayerPoints) {
       secondPlayerWins();
     } else {
-      firstPlayer.fight().sendFight(tieBreaker.getMessage(), tieBreaker.getExpectedAnswers());
+      sendTieBreaker();
     }
+  }
+
+  private void sendTieBreaker() {
+    firstPlayer.fight().sendFight(tieBreaker.getMessage(), tieBreaker.getExpectedAnswers());
+    secondPlayer.fight().sendFight(tieBreaker.getMessage(), tieBreaker.getExpectedAnswers());
   }
 
   public boolean isValidAnswer(String answer) {
@@ -78,8 +83,10 @@ public class Fight {
   private void processResults() {
     if (tieBreaker.firstWins(firstSubmission, secondSubmission)) {
       firstPlayerWins();
-    } else {
+    } else if (tieBreaker.firstWins(secondSubmission, firstSubmission)) {
       secondPlayerWins();
+    } else {
+      playersTie();
     }
     isFinished = true;
     notifyNextFight();
@@ -97,6 +104,12 @@ public class Fight {
     firstPlayer.fight().loseFight();
     secondPlayer.fight().winFight();
     fightFinished();
+  }
+
+  private void playersTie() {
+    firstSubmission = null;
+    secondPlayer = null;
+    sendTieBreaker();
   }
 
   private synchronized void fightFinished() {

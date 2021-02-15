@@ -1,12 +1,12 @@
 package com.world.navigator.game.generator.observables;
 
+import com.world.navigator.game.entities.Chest;
+import com.world.navigator.game.entities.Observable;
 import com.world.navigator.game.generator.GameRandomizer;
 import com.world.navigator.game.generator.inventory.RandomFlashLightGenerator;
 import com.world.navigator.game.generator.inventory.RandomGoldBagGenerator;
 import com.world.navigator.game.generator.inventory.RandomInventoryItemGenerator;
 import com.world.navigator.game.generator.inventory.RandomKeyGenerator;
-import com.world.navigator.game.mapitems.Chest;
-import com.world.navigator.game.mapitems.Observable;
 import com.world.navigator.game.playeritems.InventoryItem;
 import com.world.navigator.game.playeritems.Key;
 

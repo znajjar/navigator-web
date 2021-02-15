@@ -1,7 +1,7 @@
 package com.world.navigator.game;
 
+import com.world.navigator.game.entities.*;
 import com.world.navigator.game.exceptions.RoomNotFoundException;
-import com.world.navigator.game.mapitems.*;
 import com.world.navigator.game.playeritems.Key;
 
 import java.util.HashMap;
@@ -9,7 +9,6 @@ import java.util.HashMap;
 public class MapBuilder {
   private final HashMap<Integer, Room> rooms;
   private long timeLimit;
-  private int playersLimit;
   private int startingGoldCount;
 
   public MapBuilder() {
@@ -17,7 +16,7 @@ public class MapBuilder {
   }
 
   public WorldMap getMap() {
-    return new WorldMap(playersLimit, rooms, timeLimit, startingGoldCount);
+    return new WorldMap(rooms, timeLimit, startingGoldCount);
   }
 
   public void setTimeLimit(long timeLimit) {
@@ -88,10 +87,6 @@ public class MapBuilder {
   public void setRoomSide(int roomId, Direction direction, Observable roomWall) {
     Room room = getRoomByID(roomId);
     room.setSide(direction, roomWall);
-  }
-
-  public void setPlayersLimit(int playersLimit) {
-    this.playersLimit = playersLimit;
   }
 
   public void setStartingGoldCount(int startingGoldCount) {

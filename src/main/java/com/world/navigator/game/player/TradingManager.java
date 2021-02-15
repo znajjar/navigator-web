@@ -1,8 +1,8 @@
 package com.world.navigator.game.player;
 
 import com.world.navigator.game.Direction;
-import com.world.navigator.game.mapitems.Room;
-import com.world.navigator.game.mapitems.Trader;
+import com.world.navigator.game.entities.Room;
+import com.world.navigator.game.entities.Trader;
 import com.world.navigator.game.playeritems.GoldBag;
 import com.world.navigator.game.playeritems.InventoryItem;
 

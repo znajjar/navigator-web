@@ -40,11 +40,25 @@ public class PlayerController implements Runnable {
         QueuedCommand queuedCommand = commandsQueue.take();
         PlayerCommand command = queuedCommand.command;
         String[] args = queuedCommand.args;
-        command.execute(player, args);
+        executeCommand(command, args);
       } catch (InterruptedException e) {
         log.warn("player command execution was interrupted");
       } catch (Exception e) {
         log.warn("exception while executing player command:\n" + e.toString());
+      }
+    }
+  }
+
+  private void executeCommand(PlayerCommand command, String[] args) {
+    if (!command.checkArgs(args)) {
+      player.listeners().notifyListenersOnResponse(command.getInvalidArgsResponse());
+    } else if (!command.checkState(player)) {
+      player.listeners().notifyListenersOnResponse(command.getInvalidStateResponse());
+    } else {
+      PlayerResponse response = command.execute(player, args);
+      player.listeners().notifyListenersOnResponse(response);
+      if (response.isSuccessful()) {
+        command.updateState(player);
       }
     }
   }

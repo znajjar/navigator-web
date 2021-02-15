@@ -1,8 +1,8 @@
 package com.world.navigator.game.generator.observables;
 
+import com.world.navigator.game.entities.Observable;
+import com.world.navigator.game.entities.Trader;
 import com.world.navigator.game.generator.GameRandomizer;
-import com.world.navigator.game.mapitems.Observable;
-import com.world.navigator.game.mapitems.Trader;
 import com.world.navigator.game.playeritems.Flashlight;
 import com.world.navigator.game.playeritems.InventoryItem;
 

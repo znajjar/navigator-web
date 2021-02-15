@@ -1,6 +1,6 @@
 package com.world.navigator.service;
 
-import com.world.navigator.model.User;
+import com.world.navigator.entity.User;
 import com.world.navigator.security.AuthUser;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;

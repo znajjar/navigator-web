@@ -1,9 +1,9 @@
 package com.world.navigator.game.player;
 
 import com.world.navigator.game.Direction;
+import com.world.navigator.game.entities.PassThrough;
+import com.world.navigator.game.entities.Room;
 import com.world.navigator.game.exceptions.ItemIsLockedException;
-import com.world.navigator.game.mapitems.PassThrough;
-import com.world.navigator.game.mapitems.Room;
 import com.world.navigator.game.playeritems.GoldBag;
 
 import java.util.Objects;
@@ -127,10 +127,6 @@ public abstract class Player {
     listenersManager.notifyListenersOnEvent(EVENT_FACTORY.createLostEvent());
   }
 
-  public void getIntoFight() {
-    stateManager.fighting();
-  }
-
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {
@@ -142,7 +138,7 @@ public abstract class Player {
     }
 
     Player player = (Player) obj;
-    return player.id == id;
+    return Objects.equals(id, player.id);
   }
 
   @Override

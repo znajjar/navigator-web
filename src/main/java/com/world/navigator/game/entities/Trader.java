@@ -1,9 +1,11 @@
-package com.world.navigator.game.mapitems;
+package com.world.navigator.game.entities;
 
 import com.world.navigator.game.exceptions.TraderDoesNotHaveItemException;
 import com.world.navigator.game.playeritems.GoldBag;
 import com.world.navigator.game.playeritems.InventoryItem;
+import com.world.navigator.game.playeritems.Key;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class Trader implements Observable {
@@ -14,9 +16,14 @@ public class Trader implements Observable {
   public Trader(InventoryItem[] menu) {
     goldBag = new GoldBag(GOLD);
     this.menu = new HashMap<>();
-    for (InventoryItem item : menu) {
-      this.menu.put(item.getItemType(), item);
-    }
+    Arrays.stream(menu)
+            .forEach(
+                    item -> {
+                      String key;
+                      if (item instanceof Key) key = ((Key) item).getName();
+                      else key = item.getItemType();
+                      this.menu.put(key, item);
+                    });
   }
 
   @Override

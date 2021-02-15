@@ -1,4 +1,4 @@
-package com.world.navigator.model;
+package com.world.navigator.entity;
 
 import lombok.Getter;
 import org.springframework.data.annotation.Id;

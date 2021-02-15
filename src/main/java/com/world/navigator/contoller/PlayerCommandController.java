@@ -1,6 +1,6 @@
 package com.world.navigator.contoller;
 
-import com.world.navigator.model.Command;
+import com.world.navigator.entity.Command;
 import com.world.navigator.security.AuthUser;
 import com.world.navigator.service.PlayerService;
 import com.world.navigator.util.UserEventListener;
@@ -47,7 +47,9 @@ public class PlayerCommandController implements UserEventListener {
   public void onDisconnectEvent(SessionDisconnectEvent event) {
     SimpMessageHeaderAccessor accessor = SimpMessageHeaderAccessor.wrap(event.getMessage());
     AuthUser user = (AuthUser) accessor.getUser();
-    playerService.removePlayer(user);
-    log.info("{} disconnected", user);
+    if (user != null) {
+      playerService.removePlayer(user);
+      log.info("{} disconnected", user);
+    }
   }
 }

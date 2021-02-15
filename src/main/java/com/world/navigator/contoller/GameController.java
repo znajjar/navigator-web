@@ -1,6 +1,6 @@
 package com.world.navigator.contoller;
 
-import com.world.navigator.model.GameJoinEvent;
+import com.world.navigator.entity.GameJoinEvent;
 import com.world.navigator.security.AuthUser;
 import com.world.navigator.service.GameService;
 import lombok.extern.log4j.Log4j2;
@@ -10,7 +10,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Log4j2
 @RestController
@@ -78,7 +78,7 @@ public class GameController {
   }
 
   private void notifyGameListUpdate() {
-    ArrayList<String> joinableGames = gameService.listJoinableGames();
+    List<String> joinableGames = gameService.listJoinableGames();
     webSocket.convertAndSend("/topic/games/update", joinableGames);
   }
 }

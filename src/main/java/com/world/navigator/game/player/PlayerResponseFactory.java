@@ -1,9 +1,9 @@
 package com.world.navigator.game.player;
 
 import com.world.navigator.game.Direction;
-import com.world.navigator.game.mapitems.Checkable;
-import com.world.navigator.game.mapitems.Room;
-import com.world.navigator.game.mapitems.Trader;
+import com.world.navigator.game.entities.Checkable;
+import com.world.navigator.game.entities.Room;
+import com.world.navigator.game.entities.Trader;
 import com.world.navigator.game.playeritems.Flashlight;
 import com.world.navigator.game.playeritems.InventoryItem;
 
