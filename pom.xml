@@ -11,9 +11,9 @@
 	<groupId>com.world</groupId>
 	<artifactId>navigator</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
 	<name>navigator</name>
 	<description>World Navigator</description>
+	<packaging>war</packaging>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
@@ -86,6 +86,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>world-navigator</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
