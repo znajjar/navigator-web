@@ -16,14 +16,14 @@ import java.util.stream.Collectors;
 @Log4j2
 @Service
 public class GameService implements GameEventListener {
-    private final ConcurrentHashMap<String, Game> games;
-    private final PlayerService playerService;
+  private final ConcurrentHashMap<String, Game> games;
+  private final PlayerService playerService;
   private final TaskScheduler taskScheduler;
 
   public GameService(PlayerService playerService, TaskScheduler taskScheduler) {
     this.playerService = playerService;
-      this.taskScheduler = taskScheduler;
-      games = new ConcurrentHashMap<>();
+    this.taskScheduler = taskScheduler;
+    games = new ConcurrentHashMap<>();
   }
 
   public boolean canCreateGame(AuthUser user) {
@@ -32,7 +32,7 @@ public class GameService implements GameEventListener {
 
   public String newGame(AuthUser user) {
     Game game = Game.createDefaultDifficultyLevelGame(user.getName(), taskScheduler);
-      games.put(game.getId(), game);
+    games.put(game.getId(), game);
     PlayerController player = game.nextPlayer(user.getName());
     playerService.addPlayer(user, player);
     String gameId = game.getId();
@@ -42,7 +42,7 @@ public class GameService implements GameEventListener {
   }
 
   public boolean canAddUserToGame(AuthUser user, String gameId) {
-      Game game = games.get(gameId);
+    Game game = games.get(gameId);
     if (game == null) {
       return false;
     }
@@ -51,7 +51,7 @@ public class GameService implements GameEventListener {
   }
 
   public void addUserToGame(AuthUser user, String gameId) {
-      Game game = games.get(gameId);
+    Game game = games.get(gameId);
     if (game == null) {
       return;
     }
@@ -66,7 +66,7 @@ public class GameService implements GameEventListener {
   }
 
   public boolean canStartGame(AuthUser user, String gameId) {
-      Game game = games.get(gameId);
+    Game game = games.get(gameId);
     if (game == null) {
       return false;
     }
@@ -75,27 +75,27 @@ public class GameService implements GameEventListener {
   }
 
   public void startGame(AuthUser user, @Payload String gameId) {
-      Game game = games.get(gameId);
+    Game game = games.get(gameId);
     if (game == null) {
-        return;
+      return;
     }
 
-      String gameHost = game.getHostName();
-      if (gameHost.equals(user.getName())) {
-          log.info("{} started game {}", user.getName(), gameId);
-          game.start();
-      }
+    String gameHost = game.getHostName();
+    if (gameHost.equals(user.getName())) {
+      log.info("{} started game {}", user.getName(), gameId);
+      game.start();
+    }
   }
 
-    public List<String> listJoinableGames() {
-        return games.values().stream()
-                .filter((Game::isReady))
-                .map(Game::getId)
-                .collect(Collectors.toList());
-    }
+  public List<String> listJoinableGames() {
+    return games.values().stream()
+            .filter((Game::isReady))
+            .map(Game::getId)
+            .collect(Collectors.toList());
+  }
 
-    @Override
-    public void onGameEnd(String gameId) {
-        games.remove(gameId);
-    }
+  @Override
+  public void onGameEnd(String gameId) {
+    games.remove(gameId);
+  }
 }

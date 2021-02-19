@@ -51,7 +51,7 @@ public class GameController {
         user.getName(), "/queue/event/game/list", gameService.listJoinableGames());
   }
 
-  @MessageMapping("request/game/create")
+  @MessageMapping("/request/game/create")
   public void createGame(SimpMessageHeaderAccessor accessor) {
     AuthUser user = (AuthUser) accessor.getUser();
     if (gameService.canCreateGame(user)) {

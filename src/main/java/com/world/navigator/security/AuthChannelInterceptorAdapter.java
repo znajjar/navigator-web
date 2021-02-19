@@ -11,8 +11,6 @@ import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
-
 @Log4j2
 @Component
 public class AuthChannelInterceptorAdapter implements ChannelInterceptor {
@@ -31,7 +29,7 @@ public class AuthChannelInterceptorAdapter implements ChannelInterceptor {
     StompHeaderAccessor accessor =
         MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 
-    if (StompCommand.CONNECT == Objects.requireNonNull(accessor).getCommand()) {
+    if (StompCommand.CONNECT == accessor.getCommand()) {
       String username = accessor.getFirstNativeHeader(USERNAME_HEADER);
       String password = accessor.getFirstNativeHeader(PASSWORD_HEADER);
 
