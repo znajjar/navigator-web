@@ -13,27 +13,22 @@ public class FightsTracker {
     latestPlayerToEnterRoom = new ConcurrentHashMap<>();
   }
 
-  public void movePlayerTo(Player player, Room nextRoom) {
-    checkForFightInRoom(player, nextRoom);
-  }
-
-  public Room movePlayerBetween(Player player, Room currentRoom, Room nextRoom) {
-    if (!player.state().isFighting()) {
-      throw new PlayerIsInAFightException();
-    }
-    latestPlayerToEnterRoom.remove(currentRoom);
-    checkForFightInRoom(player, nextRoom);
-    return nextRoom;
-  }
-
-  private void checkForFightInRoom(Player movingPlayer, Room nextRoom) {
+  public void movePlayerTo(Player movingPlayer, Room nextRoom) {
+    latestPlayerToEnterRoom.remove(movingPlayer.navigate().getCurrentRoom(), movingPlayer);
     Player playerInRoom = latestPlayerToEnterRoom.put(nextRoom, movingPlayer);
 
     if (playerInRoom == null) {
       return;
     }
 
-    createFightBetween(movingPlayer, playerInRoom);
+    boolean isValidFight =
+            !playerInRoom.equals(movingPlayer)
+                    && !playerInRoom.state().isFinished()
+                    && playerInRoom.navigate().getCurrentRoom().equals(nextRoom);
+
+    if (isValidFight) {
+      createFightBetween(movingPlayer, playerInRoom);
+    }
   }
 
   private void createFightBetween(Player movingPlayer, Player playerInRoom) {

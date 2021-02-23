@@ -7,8 +7,8 @@ import com.world.navigator.game.entities.RoomFloor;
 import com.world.navigator.game.playeritems.InventoryItem;
 
 public class CheckingManager {
-  private static final PlayerResponseFactory RESPONSE_FACTORY = PlayerResponseFactory.getInstance();
-  private final Inventory inventory;
+  private static final JsonPlayerResponseFactory RESPONSE_FACTORY = JsonPlayerResponseFactory.getInstance();
+    private final Inventory inventory;
   private final Location location;
 
   public CheckingManager(Inventory inventory, Location location) {

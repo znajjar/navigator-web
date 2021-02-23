@@ -4,26 +4,21 @@ import com.world.navigator.game.exceptions.ItemIsLockedException;
 import com.world.navigator.game.playeritems.InventoryItem;
 
 public class Door extends LockedWithKey implements PassThrough {
-  private final int nextRoomId;
+  private final Room nextRoom;
 
-  public Door(int nextRoomId, Lock lock) {
-    super(lock);
-    this.nextRoomId = nextRoomId;
-  }
-
-  @Override
-  public int getNextRoomID() throws ItemIsLockedException {
-    if (isUnlocked()) {
-      return nextRoomId;
-    } else {
-      throw new ItemIsLockedException();
+    public Door(Room nextRoom, Lock lock) {
+        super(lock);
+        this.nextRoom = nextRoom;
     }
-  }
 
-  @Override
-  public boolean canPassThrough() {
-    return isUnlocked();
-  }
+    @Override
+    public Room getNextRoom() throws ItemIsLockedException {
+        if (isUnlocked()) {
+            return nextRoom;
+        } else {
+            throw new ItemIsLockedException();
+        }
+    }
 
   @Override
   public String look() {
@@ -52,7 +47,6 @@ public class Door extends LockedWithKey implements PassThrough {
 
   @Override
   public String toString() {
-    //    return "Door requires the %s key".formatted(getKeyName());
     return "door";
   }
 }

@@ -1,7 +1,3 @@
-// const handlers = {
-//     'look': handleLookResponse,
-//     'check': handleCheckResponse
-// }
 const handlers = {};
 handlers.look = handleLookResponse;
 handlers.check = handleCheckResponse;
@@ -106,5 +102,5 @@ function handleExitTradeResponse(playerResponse) {
 }
 
 function handleStatusResponse(playerResponse) {
-
+    outputScreen.text(playerResponse)
 }

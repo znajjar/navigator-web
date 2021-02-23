@@ -8,21 +8,44 @@
 <div class="container">
     <h1>World Navigator</h1>
     <div id="loginFormScreen">
-        <label for="usernameField"></label><input class="form-control" id="usernameField" placeholder="Username"
-                                                  type="text">
-        <label for="passwordField"></label><input class="form-control" id="passwordField" placeholder="Password"
-                                                  type="password">
-        <button class="btn btn-primary" id="connectButton" onclick="connect()">login</button>
-        <p id="loginResponse"></p> <br>
-        <label for="registerUsernameField"></label><input class="form-control" id="registerUsernameField"
-                                                          placeholder="Username"
-                                                          type="text">
-        <label for="registerPasswordField"></label><input class="form-control" id="registerPasswordField"
-                                                          placeholder="Password"
-                                                          type="password">
-        <button class="btn btn-primary" id="registerButton" onclick="signup()">signup</button>
-        <p hidden id="signupResponse"></p>
-        <br>
+        <div class="container login-container">
+            <div class="row">
+                <div class="col-md-6 login-form-1">
+                    <h3>Login</h3>
+                    <div>
+                        <form>
+                            <div class="form-group">
+                                <input class="form-control" id="usernameField" name="usernameField"
+                                       placeholder="Username"
+                                       type="text" value=""/>
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" id="passwordField" name="passwordField"
+                                       placeholder="Password"
+                                       type="password" value=""/>
+                            </div>
+                            <button class="btn form-group" onclick="connect()" type="button">Log in</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-6 login-form-2">
+                    <h3>Sign up</h3>
+                    <form>
+                        <div class="form-group">
+                            <input class="form-control" id="registerUsernameField" name="registerUsernameField"
+                                   placeholder="Username"
+                                   type="text" value=""/>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" id="registerPasswordField" name="registerPasswordField"
+                                   placeholder="Password" type="password" value=""/>
+                        </div>
+                        <button class="btn form-group" onclick="signup()" type="button">Sign up</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <div hidden id="joinGameScreen">
@@ -41,19 +64,20 @@
     <div hidden id="gameScreen">
 
         <div id="navigatingScreen">
-            <button class="btn btn-primary" onclick="lookCommand()">look</button>
-            <button class="btn btn-primary" onclick="checkCommand()">check</button>
+            <button class="btn btn-primary" onclick="useFlashlightCommand()">use flashlight</button>
             <button class="btn btn-primary" onclick="moveForwardCommand()">move forward</button>
-            <button class="btn btn-primary" onclick="moveBackwardCommand()">move backward</button>
+            <button class="btn btn-primary" onclick="checkCommand()">check</button>
             <button class="btn btn-primary" onclick="turnLeftCommand()">turn left</button>
+            <button class="btn btn-primary" onclick="lookCommand()">look</button>
             <button class="btn btn-primary" onclick="turnRightCommand()">turn right</button>
             <button class="btn btn-primary" onclick="switchLightsCommand()">switch lights</button>
-            <button class="btn btn-primary" onclick="useFlashlightCommand()">use flashlight</button>
+            <button class="btn btn-primary" onclick="moveBackwardCommand()">move backward</button>
             <button class="btn btn-primary" onclick="tradeCommand()">trade</button>
-            <br>
-            <label for="keyNameField"></label><input class="form-control" id="keyNameField" placeholder="key name"
-                                                     type="text">
+            <button class="btn btn-primary" onclick="statusCommand()">status</button>
             <button class="btn btn-primary" onclick="useKeyCommand()">use key</button>
+            <input class="frm form-control" id="keyNameField" placeholder="key name"
+                   style="width: 30%; margin: 3px; display:inline-block;"
+                   type="text">
         </div>
 
         <div hidden id="tradingScreen">
@@ -74,10 +98,12 @@
 
     <div hidden id="gameEndedScreen">
         <p id="gameEndedText"></p>
-        <button class="btn btn-primary" onclick="">join another game</button>
+        <button class="btn btn-primary" onclick="goToJoinGameScreen()">join another game</button>
     </div>
 
 </div>
+
+<link rel="stylesheet" th:href="@{/style/style.css}">
 <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
       integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" rel="stylesheet">
 <script crossorigin="anonymous"
@@ -92,5 +118,6 @@
 <script th:src="@{/js/script/script.js}" type="text/javascript"></script>
 <script th:src="@{/js/script/commands.js}" type="text/javascript"></script>
 <script th:src="@{/js/script/responseHandler.js}" type="text/javascript"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </body>
 </html>

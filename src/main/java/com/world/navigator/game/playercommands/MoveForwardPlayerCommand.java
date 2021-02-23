@@ -7,7 +7,7 @@ public class MoveForwardPlayerCommand extends NavigationPlayerCommand {
 
   @Override
   public PlayerResponse execute(Player player, String[] args) {
-      return player.moveForward();
+      return player.navigate().moveForward();
   }
 
     @Override

@@ -3,18 +3,18 @@ package com.world.navigator.game.player;
 import com.world.navigator.game.fighting.Fight;
 
 public class FightingManager {
-  private static final PlayerResponseFactory RESPONSE_FACTORY = PlayerResponseFactory.getInstance();
-  private static final PlayerEventFactory EVENT_FACTORY = PlayerEventFactory.getInstance();
-  private final ListenersManager listenersManager;
-  private final StateManager stateManager;
-  private final int id;
-  private Fight currentFight;
+    private static final JsonPlayerResponseFactory RESPONSE_FACTORY = JsonPlayerResponseFactory.getInstance();
+    private static final JsonPlayerEventFactory EVENT_FACTORY = JsonPlayerEventFactory.getInstance();
+    private final ListenersManager listenersManager;
+    private final StateManager stateManager;
+    private final int id;
+    private Fight currentFight;
 
-  public FightingManager(ListenersManager listenersManager, StateManager stateManager, int id) {
-    this.listenersManager = listenersManager;
-    this.stateManager = stateManager;
-    this.id = id;
-  }
+    public FightingManager(ListenersManager listenersManager, StateManager stateManager, int id) {
+        this.listenersManager = listenersManager;
+        this.stateManager = stateManager;
+        this.id = id;
+    }
 
   public synchronized Fight setCurrentFightIfAbsent(Fight nextFight) {
     if (currentFight == null) {

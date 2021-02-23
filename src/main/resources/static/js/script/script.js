@@ -26,9 +26,7 @@ function connect() {
         stompClient.subscribe('/user/queue/event/game/list', handleListEvent);
         stompClient.subscribe('/user/queue/event/game/joined', handleJoinEvent);
         stompClient.subscribe('/topic/games/update', handleListEvent);
-        hideAllScreens();
-        showJoinGame();
-        requestGamesList();
+        goToJoinGameScreen();
     }, function (err) {
         console.log(err)
         const response = $("#loginResponse");
@@ -53,6 +51,12 @@ function signup() {
             response.show();
             response.text(data);
         });
+}
+
+function goToJoinGameScreen() {
+    hideAllScreens();
+    showJoinGame();
+    requestGamesList();
 }
 
 function hideAllScreens() {
@@ -115,7 +119,6 @@ function createGameNode(gameId) {
     button.onclick = function () {
         joinGame(gameId)
     };
-    button.class = "btn btn-primary";
     button.textContent = 'join';
     node.appendChild(text)
     node.appendChild(button)
@@ -135,20 +138,16 @@ function handleEvent(event) {
 function handlePlayerEvent(playerEvent) {
     const gameEndedScreen = $("#gameEndedScreen");
     const gameEndedText = $("#gameEndedText");
-    switch (playerEvent.eventType) {
-        case 'gameStart':
-            hideAllScreens();
-            $('#gameScreen').show();
-            break;
-        case 'gameWon':
-            hideAllScreens();
+    if (playerEvent.eventType === 'gameStart') {
+        hideAllScreens();
+        $('#gameScreen').show();
+    } else if (playerEvent.eventType === 'gameEnd') {
+        hideAllScreens();
+        if (playerEvent.state === 'won') {
             gameEndedText.text('you won the game');
-            gameEndedScreen.show();
-            break;
-        case 'gameLost':
-            hideAllScreens();
+        } else {
             gameEndedText.text('you lost the game');
-            gameEndedScreen.show();
-            break;
+        }
+        gameEndedScreen.show();
     }
 }

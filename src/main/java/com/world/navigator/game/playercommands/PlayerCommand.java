@@ -1,11 +1,11 @@
 package com.world.navigator.game.playercommands;
 
+import com.world.navigator.game.player.JsonPlayerResponseFactory;
 import com.world.navigator.game.player.Player;
 import com.world.navigator.game.player.PlayerResponse;
-import com.world.navigator.game.player.PlayerResponseFactory;
 
 public abstract class PlayerCommand {
-  static final PlayerResponseFactory RESPONSE_FACTORY = PlayerResponseFactory.getInstance();
+  static final JsonPlayerResponseFactory RESPONSE_FACTORY = JsonPlayerResponseFactory.getInstance();
   static final String INVALID_STATE_COMMENT = "Invalid state";
   static final String INVALID_ARGS_COMMENT = "Invalid arguments";
 

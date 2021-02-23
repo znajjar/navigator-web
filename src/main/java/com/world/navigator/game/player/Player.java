@@ -1,20 +1,17 @@
 package com.world.navigator.game.player;
 
 import com.world.navigator.game.Direction;
-import com.world.navigator.game.entities.PassThrough;
 import com.world.navigator.game.entities.Room;
-import com.world.navigator.game.exceptions.ItemIsLockedException;
 import com.world.navigator.game.playeritems.GoldBag;
 
 import java.util.Objects;
 
-public abstract class Player {
-  private static final PlayerResponseFactory RESPONSE_FACTORY = PlayerResponseFactory.getInstance();
-  private static final PlayerEventFactory EVENT_FACTORY = PlayerEventFactory.getInstance();
-  private static final String CANNOT_MOVE_THROUGH_ITEM = "You can't move through item";
-  private final ListenersManager listenersManager;
+public class Player {
+  private static final JsonPlayerResponseFactory RESPONSE_FACTORY = JsonPlayerResponseFactory.getInstance();
+  private static final JsonPlayerEventFactory EVENT_FACTORY = JsonPlayerEventFactory.getInstance();
   private final InteractionManager interactionManager;
   private final NavigationManager navigationManager;
+  private final ListenersManager listenersManager;
   private final CheckingManager checkingManager;
   private final FightingManager fightingManager;
   private final TradingManager tradingManager;
@@ -31,7 +28,7 @@ public abstract class Player {
     inventory = new Inventory();
     inventory.takeItem(new GoldBag());
     interactionManager = new InteractionManager(inventory, location);
-    navigationManager = new NavigationManager(inventory, location);
+    navigationManager = new NavigationManager(inventory, location, id);
     checkingManager = new CheckingManager(inventory, location);
     tradingManager = new TradingManager(inventory, location);
     listenersManager = new ListenersManager(name);
@@ -46,35 +43,6 @@ public abstract class Player {
   public PlayerResponse getStatus() {
     return RESPONSE_FACTORY.createSuccessfulStatusResponse(inventory, location);
   }
-
-  public PlayerResponse moveForward() {
-    if (navigationManager.isPassThroughInFront()) {
-      return moveThrough(navigationManager.getPassThroughInFront());
-    } else {
-      return RESPONSE_FACTORY.createFailedMoveResponse(CANNOT_MOVE_THROUGH_ITEM);
-    }
-  }
-
-  public PlayerResponse moveBackward() {
-    if (navigationManager.isPassThroughBehind()) {
-      return moveThrough(navigationManager.getPassThroughBehind());
-    } else {
-      return RESPONSE_FACTORY.createFailedMoveResponse(CANNOT_MOVE_THROUGH_ITEM);
-    }
-  }
-
-  private PlayerResponse moveThrough(PassThrough passThrough) {
-    try {
-      Room nextRoom = requestMove(passThrough);
-      navigationManager.moveTo(nextRoom);
-      checkingManager.checkFloor();
-      return RESPONSE_FACTORY.createSuccessfulMoveResponse(nextRoom);
-    } catch (ItemIsLockedException e) {
-      return RESPONSE_FACTORY.createFailedMoveResponse("Door is locked.");
-    }
-  }
-
-  public abstract Room requestMove(PassThrough passThrough) throws ItemIsLockedException;
 
   public NavigationManager navigate() {
     return navigationManager;

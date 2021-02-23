@@ -1,7 +1,9 @@
 {
   "name": "websocket",
   "version": "1.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "bourbon": "^7.0.0"
+  },
   "devDependencies": {
     "@stomp/stompjs": "^6.0.0"
   }

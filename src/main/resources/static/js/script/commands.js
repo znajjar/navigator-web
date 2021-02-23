@@ -39,6 +39,10 @@ function tradeCommand() {
     sendCommand('trade');
 }
 
+function statusCommand() {
+    sendCommand('status');
+}
+
 function buyItemCommand() {
     const buyItemField = $("#buyItemField")
     const itemName = buyItemField.val();

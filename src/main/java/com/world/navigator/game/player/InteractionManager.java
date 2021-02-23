@@ -7,7 +7,7 @@ import com.world.navigator.game.entities.RoomWithLightSwitch;
 import com.world.navigator.game.playeritems.Key;
 
 public class InteractionManager {
-  private static final PlayerResponseFactory RESPONSE_FACTORY = PlayerResponseFactory.getInstance();
+  private static final JsonPlayerResponseFactory RESPONSE_FACTORY = JsonPlayerResponseFactory.getInstance();
   private final Inventory inventory;
   private final Location location;
 

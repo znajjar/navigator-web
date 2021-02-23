@@ -21,8 +21,13 @@ public class WebController {
     this.passwordEncoder = passwordEncoder;
   }
 
+  @GetMapping("/")
+  public String getDefault() {
+    return "redirect:world-navigator";
+  }
+
   @GetMapping("/world-navigator")
-  public String getWebSocketWithSockJs() {
+  public String getWorldNavigator() {
     return "world-navigator";
   }
 

@@ -1,15 +1,14 @@
 package com.world.navigator.game;
 
-import com.world.navigator.game.entities.PassThrough;
 import com.world.navigator.game.entities.Room;
 import com.world.navigator.game.entities.WinningRoom;
-import com.world.navigator.game.exceptions.ItemIsLockedException;
 import com.world.navigator.game.fighting.FightsTracker;
 import com.world.navigator.game.generator.DefaultDifficultyLevel;
 import com.world.navigator.game.generator.DifficultyLevel;
 import com.world.navigator.game.generator.WorldMapGenerator;
 import com.world.navigator.game.player.Player;
 import com.world.navigator.game.player.PlayerController;
+import com.world.navigator.game.player.PlayerMovementListener;
 import com.world.navigator.game.playeritems.GoldBag;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.TaskScheduler;
@@ -23,7 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledFuture;
 
 @Log4j2
-public class Game {
+public class Game implements PlayerMovementListener {
   private static final int PLAYER_CONTROLLER_DELAY = 100;
   private final CopyOnWriteArrayList<GameEventListener> listeners;
   private final ConcurrentHashMap<Integer, Player> players;
@@ -55,13 +54,8 @@ public class Game {
 
   public PlayerController nextPlayer(String name) {
     int playerId = nextPlayerId();
-    Player nextPlayer =
-        new Player(playerId, name) {
-          @Override
-          public Room requestMove(PassThrough passThrough) throws ItemIsLockedException {
-            return movePlayerThrough(this, passThrough);
-          }
-        };
+    Player nextPlayer = new Player(playerId, name);
+    nextPlayer.navigate().registerMovementListener(this);
 
     players.put(playerId, nextPlayer);
     PlayerController controller = new PlayerController(nextPlayer);
@@ -71,27 +65,6 @@ public class Game {
 
   private synchronized int nextPlayerId() {
     return playerIdIndex++;
-  }
-
-  private Room movePlayerThrough(Player player, PassThrough passThrough) {
-    Room nextRoom = worldMap.getRoomById(passThrough.getNextRoomID());
-    nextRoom =
-        fightsTracker.movePlayerBetween(player, player.navigate().getCurrentRoom(), nextRoom);
-    if (nextRoom instanceof WinningRoom) {
-      playerWon(player);
-    }
-    return nextRoom;
-  }
-
-  private void playerWon(Player winningPlayer) {
-    if (checkState(GameState.IN_GAME)) {
-      setState(GameState.ENDED);
-      timerTask.cancel(false);
-      winningPlayer.winGame();
-      log.info("player {} won the {} game", winningPlayer.getID(), id);
-      allPlayersLostExcept(winningPlayer);
-      onGameEnd();
-    }
   }
 
   public void start() {
@@ -112,6 +85,28 @@ public class Game {
   private void setTimer() {
     Date finishDate = new Date(Calendar.getInstance().getTimeInMillis() + worldMap.getTimeLimit());
     timerTask = taskScheduler.schedule(this::timeUpCallback, finishDate);
+  }
+
+  @Override
+  public void onMove(int playerId, Room nextRoom) {
+    Player movingPlayer = players.get(playerId);
+
+    if (nextRoom instanceof WinningRoom) {
+      playerWon(movingPlayer);
+    }
+
+    fightsTracker.movePlayerTo(movingPlayer, nextRoom);
+  }
+
+  private void playerWon(Player winningPlayer) {
+    if (checkState(GameState.IN_GAME)) {
+      setState(GameState.ENDED);
+      timerTask.cancel(false);
+      winningPlayer.winGame();
+      log.info("player {} won the {} game", winningPlayer.getID(), id);
+      allPlayersLostExcept(winningPlayer);
+      onGameEnd();
+    }
   }
 
   private void timeUpCallback() {

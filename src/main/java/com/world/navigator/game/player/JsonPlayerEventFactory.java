@@ -1,17 +1,18 @@
 package com.world.navigator.game.player;
 
-public class PlayerEventFactory {
-  private static final PlayerEventFactory INSTANCE = new PlayerEventFactory();
+public class JsonPlayerEventFactory {
+    private static final JsonPlayerEventFactory INSTANCE = new JsonPlayerEventFactory();
 
-  private PlayerEventFactory() {}
+    private JsonPlayerEventFactory() {
+    }
 
-  public static PlayerEventFactory getInstance() {
-    return INSTANCE;
-  }
+    public static JsonPlayerEventFactory getInstance() {
+        return INSTANCE;
+    }
 
-  public PlayerEvent createWinEvent() {
-    PlayerEvent event = new JsonPlayerEvent("gameEnd");
-    event.put("state", "win");
+    public PlayerEvent createWinEvent() {
+        PlayerEvent event = new JsonPlayerEvent("gameEnd");
+        event.put("state", "win");
     return event;
   }
 

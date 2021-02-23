@@ -3,16 +3,31 @@ package com.world.navigator.game.player;
 import com.world.navigator.game.Direction;
 import com.world.navigator.game.entities.PassThrough;
 import com.world.navigator.game.entities.Room;
+import com.world.navigator.game.exceptions.ItemIsLockedException;
 import com.world.navigator.game.playeritems.Flashlight;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+
 public class NavigationManager {
-  private static final PlayerResponseFactory RESPONSE_FACTORY = PlayerResponseFactory.getInstance();
+  private static final JsonPlayerResponseFactory RESPONSE_FACTORY = JsonPlayerResponseFactory.getInstance();
+  private final CopyOnWriteArrayList<PlayerMovementListener> listeners;
   private final Inventory inventory;
   private final Location location;
+  private final int playerId;
 
-  public NavigationManager(Inventory inventory, Location location) {
+  public NavigationManager(Inventory inventory, Location location, int playerId) {
     this.inventory = inventory;
     this.location = location;
+    this.playerId = playerId;
+    listeners = new CopyOnWriteArrayList<>();
+  }
+
+  public void registerMovementListener(PlayerMovementListener listener) {
+    listeners.add(listener);
+  }
+
+  public void notifyListenersOnMove(Room nextRoom) {
+    listeners.forEach(listener -> listener.onMove(playerId, nextRoom));
   }
 
   public Room getCurrentRoom() {
@@ -31,57 +46,50 @@ public class NavigationManager {
     return RESPONSE_FACTORY.createSuccessfulTurnLeftResponse(facingDirection);
   }
 
-  public boolean isPassThroughInFront() {
+  public PlayerResponse moveForward() {
     Direction facingDirection = location.getFacingDirection();
     Room currentRoom = location.getCurrentRoom();
-    return currentRoom.isPassThroughInDirection(facingDirection);
+    if (currentRoom.isPassThroughInDirection(facingDirection)) {
+      return moveThrough(currentRoom.getPassThroughInDirection(facingDirection));
+    } else {
+      return RESPONSE_FACTORY.createFailedMoveResponse("You can't pass through item in front.");
+    }
   }
 
-  public boolean isPassThroughBehind() {
-    Direction oppositeDirection = location.getFacingDirection().getOpposite();
-    Room currentRoom = location.getCurrentRoom();
-    return currentRoom.isPassThroughInDirection(oppositeDirection);
-  }
-
-  public PassThrough getPassThroughInFront() {
-    Direction facingDirection = location.getFacingDirection();
-    return getPassThroughInDirection(facingDirection);
-  }
-
-  public PassThrough getPassThroughBehind() {
+  public PlayerResponse moveBackward() {
     Direction facingDirection = location.getFacingDirection().getOpposite();
-    return getPassThroughInDirection(facingDirection);
-  }
-
-  private PassThrough getPassThroughInDirection(Direction direction) {
     Room currentRoom = location.getCurrentRoom();
-    return currentRoom.getPassThroughInDirection(direction);
+    if (currentRoom.isPassThroughInDirection(facingDirection)) {
+      return moveThrough(currentRoom.getPassThroughInDirection(facingDirection));
+    } else {
+      return RESPONSE_FACTORY.createFailedMoveResponse("You can't pass through item behind.");
+    }
   }
 
-  public void moveTo(Room nextRoom) {
-    location.setCurrentRoom(nextRoom);
+  private PlayerResponse moveThrough(PassThrough passThrough) {
+    try {
+      Room nextRoom = passThrough.getNextRoom();
+      location.setCurrentRoom(nextRoom);
+      notifyListenersOnMove(nextRoom);
+      return RESPONSE_FACTORY.createSuccessfulMoveResponse(nextRoom);
+    } catch (ItemIsLockedException e) {
+      return RESPONSE_FACTORY.createFailedMoveResponse("Item is locked");
+    }
   }
 
   public PlayerResponse look() {
-    if (canLookInFront()) {
-      String itemTypeInFront = lookInFront();
-      return RESPONSE_FACTORY.createSuccessfulLookResponse(itemTypeInFront);
+    Direction facingDirection = location.getFacingDirection();
+    Room currentRoom = location.getCurrentRoom();
+    Flashlight flashlight = inventory.getFlashlight();
+    if (currentRoom.canLookInDirectionWithFlashLight(facingDirection, flashlight)) {
+      String itemInFront = currentRoom.lookInDirectionWithFlashlight(facingDirection, flashlight);
+      return RESPONSE_FACTORY.createSuccessfulLookResponse(itemInFront);
     } else {
       return RESPONSE_FACTORY.createFailedLookResponse("Room is not lit.");
     }
   }
 
-  private boolean canLookInFront() {
-    Direction facingDirection = location.getFacingDirection();
-    Room currentRoom = location.getCurrentRoom();
-    Flashlight flashlight = inventory.getFlashlight();
-    return currentRoom.canLookInDirectionWithFlashLight(facingDirection, flashlight);
-  }
-
-  private String lookInFront() {
-    Direction facingDirection = location.getFacingDirection();
-    Room currentRoom = location.getCurrentRoom();
-    Flashlight flashlight = inventory.getFlashlight();
-    return currentRoom.lookInDirectionWithFlashlight(facingDirection, flashlight);
+  public void moveTo(Room nextRoom) {
+    location.setCurrentRoom(nextRoom);
   }
 }

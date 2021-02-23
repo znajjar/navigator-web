@@ -68,15 +68,11 @@ public class MapBuilder {
     Room toRoom = getRoomByID(toRoomId);
 
     Lock lock = new Lock(key, isLocked);
-    Door fromDoor = new Door(toRoom.getID(), lock);
-    Door toDoor = new Door(fromRoom.getID(), lock);
+    Door fromDoor = new Door(toRoom, lock);
+    Door toDoor = new Door(fromRoom, lock);
 
     fromRoom.setSide(direction, fromDoor);
     toRoom.setSide(direction.getOpposite(), toDoor);
-  }
-
-  private boolean roomExists(int roomId) {
-    return rooms.containsKey(roomId);
   }
 
   public boolean hasDoorInDirection(int roomId, Direction direction) {

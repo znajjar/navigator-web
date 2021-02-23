@@ -20,11 +20,11 @@ class Location {
     this.facingDirection = facingDirection;
   }
 
-  public Room getCurrentRoom() {
+  public synchronized Room getCurrentRoom() {
     return currentRoom;
   }
 
-  public void setCurrentRoom(Room currentRoom) {
+  public synchronized void setCurrentRoom(Room currentRoom) {
     this.currentRoom = currentRoom;
   }
 }

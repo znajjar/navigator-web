@@ -7,18 +7,19 @@ import com.world.navigator.game.entities.Trader;
 import com.world.navigator.game.playeritems.Flashlight;
 import com.world.navigator.game.playeritems.InventoryItem;
 
-public class PlayerResponseFactory {
-  private static final PlayerResponseFactory INSTANCE = new PlayerResponseFactory();
+public class JsonPlayerResponseFactory {
+    private static final JsonPlayerResponseFactory INSTANCE = new JsonPlayerResponseFactory();
 
-  private PlayerResponseFactory() {}
+    private JsonPlayerResponseFactory() {
+    }
 
-  public static PlayerResponseFactory getInstance() {
-    return INSTANCE;
-  }
+    public static JsonPlayerResponseFactory getInstance() {
+        return INSTANCE;
+    }
 
-  public PlayerResponse createSuccessfulResponse(String requestType) {
-    JsonPlayerResponse response = new JsonPlayerResponse("response", true);
-    response.put("requestType", requestType);
+    public PlayerResponse createSuccessfulResponse(String requestType) {
+        JsonPlayerResponse response = new JsonPlayerResponse("response", true);
+        response.put("requestType", requestType);
     return response;
   }
 

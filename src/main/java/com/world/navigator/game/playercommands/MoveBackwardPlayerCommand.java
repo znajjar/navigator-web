@@ -7,7 +7,7 @@ public class MoveBackwardPlayerCommand extends NavigationPlayerCommand {
 
   @Override
   public PlayerResponse execute(Player player, String[] args) {
-      return player.moveBackward();
+      return player.navigate().moveBackward();
   }
 
     @Override

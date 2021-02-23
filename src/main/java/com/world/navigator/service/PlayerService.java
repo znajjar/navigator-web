@@ -7,23 +7,20 @@ import com.world.navigator.game.player.PlayerEventListener;
 import com.world.navigator.game.player.PlayerResponse;
 import com.world.navigator.security.AuthUser;
 import com.world.navigator.util.PlayerCommandSet;
-import com.world.navigator.util.UserEventListener;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class PlayerService implements PlayerEventListener {
-  private static final int QUEUE_SIZE = 100;
   private static final PlayerCommandSet COMMAND_SET = PlayerCommandSet.getInstance();
   private final ConcurrentHashMap<AuthUser, PlayerController> players;
-  private final BlockingQueue<UserEventListener> listeners;
+  private final SimpMessagingTemplate webSocket;
 
-  public PlayerService() {
+  public PlayerService(SimpMessagingTemplate webSocket) {
+    this.webSocket = webSocket;
     players = new ConcurrentHashMap<>();
-    listeners = new ArrayBlockingQueue<>(QUEUE_SIZE);
   }
 
   public void addPlayer(AuthUser user, PlayerController player) {
@@ -47,32 +44,26 @@ public class PlayerService implements PlayerEventListener {
   }
 
   @Override
-  public void onResponse(String playerName, PlayerResponse event) {
-    notifyListeners(playerName, event.toString());
+  public void onResponse(String playerName, PlayerResponse response) {
+    notifyUser(playerName, response.toString());
   }
 
   @Override
   public void onEvent(String playerName, PlayerEvent event) {
     if (event.getEventType().equals("gameEnd")) {
       players.forEach(
-          ((authUser, playerController) -> {
-            if (authUser.getName().equals(playerName)) {
-              players.remove(authUser);
-              playerController.removeListener(this);
-            }
-          }));
+              ((authUser, playerController) -> {
+                if (authUser.getName().equals(playerName)) {
+                  players.remove(authUser);
+                  playerController.removeListener(this);
+                }
+              }));
     }
-    notifyListeners(playerName, event.toString());
+    notifyUser(playerName, event.toString());
   }
 
-  public void registerListener(UserEventListener listener) {
-    listeners.add(listener);
-  }
-
-  public void notifyListeners(String userName, String event) {
-    for (UserEventListener listener : listeners) {
-      listener.onEvent(userName, event);
-    }
+  private void notifyUser(String username, String message) {
+    webSocket.convertAndSendToUser(username, "/queue/event/player", message);
   }
 
   public boolean isUserInGame(AuthUser user) {

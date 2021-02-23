@@ -8,8 +8,8 @@ import com.world.navigator.game.playeritems.InventoryItem;
 
 public class TradingManager {
   public static final String NOT_FACING_TRADER_MESSAGE = "You aren't facing a trader";
-  private static final PlayerResponseFactory RESPONSE_FACTORY = PlayerResponseFactory.getInstance();
-  private final Inventory inventory;
+    private static final JsonPlayerResponseFactory RESPONSE_FACTORY = JsonPlayerResponseFactory.getInstance();
+    private final Inventory inventory;
   private final Location location;
 
   TradingManager(Inventory inventory, Location location) {
